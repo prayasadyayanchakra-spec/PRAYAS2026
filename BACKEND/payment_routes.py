@@ -1,22 +1,31 @@
 from flask import Blueprint, request, jsonify
-import MySQLdb
+import psycopg2
+import psycopg2.extras
 import os
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bp = Blueprint('payments', __name__, url_prefix='/api/payments')
+
+def get_db_connection():
+    """Get PostgreSQL database connection"""
+    return psycopg2.connect(
+        host=os.getenv('DB_HOST', 'dpg-d62rk3ur433s73a1514g-a.oregon-postgres.render.com'),
+        user=os.getenv('DB_USER', 'prayas2026_user'),
+        password=os.getenv('DB_PASSWORD', 'IYI9rIK1xQTvt9zooJ844Bw4LN2ZQukS'),
+        database=os.getenv('DB_NAME', 'prayas2026'),
+        port=os.getenv('DB_PORT', '5432')
+    )
 
 @bp.route('', methods=['GET'])
 def get_payments():
     school = request.args.get('school')
     
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         if school:
             cursor.execute("""
@@ -46,13 +55,8 @@ def create_payment():
     try:
         payment_id = str(uuid.uuid4())
         
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("""
             INSERT INTO payment_receipts 
@@ -73,13 +77,8 @@ def create_payment():
 @bp.route('/<int:payment_id>', methods=['GET'])
 def get_payment(payment_id):
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("SELECT * FROM payment_receipts WHERE id = %s", (payment_id,))
         payment = cursor.fetchone()

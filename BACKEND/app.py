@@ -6,6 +6,8 @@ import jwt
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import psycopg2
+import psycopg2.extras
 
 # Load environment variables
 load_dotenv()
@@ -31,7 +33,14 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
 db = SQLAlchemy(app)
 
 # Import routes
-from routes import auth_routes, student_routes, payment_routes, fee_routes, book_routes, publication_routes, ranker_routes, notification_routes
+import auth_routes
+import student_routes
+import payment_routes
+import fee_routes
+import book_routes
+import publication_routes
+import ranker_routes
+import notification_routes
 
 # Register blueprints
 app.register_blueprint(auth_routes.bp)
@@ -56,4 +65,5 @@ def server_error(error):
     return jsonify({'error': 'Internal server error'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='https://prayas2026.onrender.com', port=5432)
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)

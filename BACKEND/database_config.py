@@ -1,11 +1,13 @@
 """
 Database Configuration and Connection Utilities
-This module handles database connections and provides helper functions
+This module handles PostgreSQL database connections and provides helper functions
 """
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.pool import StaticPool
 from dotenv import load_dotenv
+import psycopg2
+import psycopg2.extras
 
 load_dotenv()
 
@@ -44,9 +46,10 @@ def get_database_url():
 def test_database_connection():
     """Test the database connection"""
     try:
+        from sqlalchemy import text
         engine = create_engine(DatabaseConfig.DATABASE_URL)
         with engine.connect() as connection:
-            result = connection.execute("SELECT 1")
+            result = connection.execute(text("SELECT 1"))
             return True, "Database connection successful"
     except Exception as e:
         return False, f"Database connection failed: {str(e)}"

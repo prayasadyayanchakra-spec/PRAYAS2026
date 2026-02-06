@@ -3,10 +3,25 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from datetime import datetime, timedelta
 import os
+import psycopg2
+import psycopg2.extras
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
+
+def get_db_connection():
+    """Get PostgreSQL database connection"""
+    return psycopg2.connect(
+        host=os.getenv('DB_HOST', 'dpg-d62rk3ur433s73a1514g-a.oregon-postgres.render.com'),
+        user=os.getenv('DB_USER', 'prayas2026_user'),
+        password=os.getenv('DB_PASSWORD', 'IYI9rIK1xQTvt9zooJ844Bw4LN2ZQukS'),
+        database=os.getenv('DB_NAME', 'prayas2026'),
+        port=os.getenv('DB_PORT', '5432')
+    )
 
 @bp.route('/login', methods=['POST'])
 def login():
@@ -16,38 +31,58 @@ def login():
         return jsonify({'success': False, 'message': 'Missing required fields'}), 400
     
     try:
-        # This is a simplified version - implement actual database lookup
         username = data['username']
         password = data['password']
         login_type = data['loginType']
         
-        # Hardcoded credentials for demo (replace with database query)
-        credentials = {
-            'Superadmin': {'password': 'Superadmin@1341', 'type': 'superadmin', 'redirect': 'superadmin.html'},
-            'Schooladmin1': {'password': 'Schooladmin@13', 'type': 'admin', 'redirect': 'admin1.html'},
-            'Schooladmin2': {'password': 'Schooladmin@93', 'type': 'admin', 'redirect': 'admin2.html'},
-            'Schooladmin3': {'password': 'Schooladmin@390', 'type': 'admin', 'redirect': 'admin3.html'},
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+        # Query user by username or email
+        cursor.execute("""
+            SELECT id, name, username, email, password, role 
+            FROM users 
+            WHERE username = %s OR email = %s
+        """, (username, username))
+        
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if not user:
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+        
+        # Verify password
+        if not check_password_hash(user['password'], password):
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+        
+        # Determine redirect based on role
+        redirect_map = {
+            'superadmin': 'superadmin.html',
+            'admin': 'admin.html',
+            'student': 'bookstore.html',
+            'teacher': 'bookstore.html'
         }
         
-        if username in credentials and credentials[username]['password'] == password:
-            token = jwt.encode(
-                {
-                    'username': username,
-                    'type': login_type,
-                    'exp': datetime.utcnow() + timedelta(hours=24)
-                },
-                SECRET_KEY,
-                algorithm='HS256'
-            )
-            
-            return jsonify({
-                'success': True,
-                'token': token,
-                'redirect': credentials[username]['redirect'],
-                'message': 'Login successful'
-            }), 200
-        else:
-            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+        token = jwt.encode(
+            {
+                'user_id': user['id'],
+                'username': user['username'],
+                'role': user['role'],
+                'exp': datetime.utcnow() + timedelta(hours=24)
+            },
+            SECRET_KEY,
+            algorithm='HS256'
+        )
+        
+        return jsonify({
+            'success': True,
+            'token': token,
+            'redirect': redirect_map.get(user['role'], 'bookstore.html'),
+            'user_id': user['id'],
+            'role': user['role'],
+            'message': 'Login successful'
+        }), 200
             
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
@@ -64,12 +99,47 @@ def register():
         # Hash password
         hashed_password = generate_password_hash(data['password'])
         
-        # Insert into database (implement actual database insert)
-        # For now, return success
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+        # Check if user already exists
+        cursor.execute(
+            "SELECT id FROM users WHERE email = %s OR username = %s",
+            (data.get('email', data['fullName'].lower()), data['fullName'].lower())
+        )
+        
+        if cursor.fetchone():
+            cursor.close()
+            conn.close()
+            return jsonify({'success': False, 'message': 'User already exists'}), 409
+        
+        # Insert new user
+        cursor.execute("""
+            INSERT INTO users (name, username, email, password, role, caste, phone, current_roll_no, current_class, father_name)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+        """, (
+            data['fullName'],
+            data['fullName'].lower(),
+            data.get('email', f"{data['fullName'].lower()}@prayas2026.com"),
+            hashed_password,
+            data['registerType'],
+            data['caste'],
+            data['phone'],
+            data['rollNumber'],
+            data['class'],
+            data['fatherName']
+        ))
+        
+        user_id = cursor.fetchone()['id']
+        conn.commit()
+        cursor.close()
+        conn.close()
         
         return jsonify({
             'success': True,
-            'message': 'Registration successful'
+            'message': 'Registration successful',
+            'user_id': user_id
         }), 201
         
     except Exception as e:

@@ -1,19 +1,28 @@
 from flask import Blueprint, request, jsonify
-import MySQLdb
+import psycopg2
+import psycopg2.extras
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bp = Blueprint('publications', __name__, url_prefix='/api/publications')
+
+def get_db_connection():
+    """Get PostgreSQL database connection"""
+    return psycopg2.connect(
+        host=os.getenv('DB_HOST', 'dpg-d62rk3ur433s73a1514g-a.oregon-postgres.render.com'),
+        user=os.getenv('DB_USER', 'prayas2026_user'),
+        password=os.getenv('DB_PASSWORD', 'IYI9rIK1xQTvt9zooJ844Bw4LN2ZQukS'),
+        database=os.getenv('DB_NAME', 'prayas2026'),
+        port=os.getenv('DB_PORT', '5432')
+    )
 
 @bp.route('', methods=['GET'])
 def get_publications():
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("""
             SELECT id, title, author, category, abstract, image_url as image, 
@@ -34,13 +43,8 @@ def get_publications():
 @bp.route('/<int:pub_id>/approve', methods=['POST'])
 def approve_publication(pub_id):
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("UPDATE publication SET status = %s WHERE id = %s", ('approved', pub_id))
         conn.commit()
@@ -55,13 +59,8 @@ def approve_publication(pub_id):
 @bp.route('/<int:pub_id>/reject', methods=['POST'])
 def reject_publication(pub_id):
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("UPDATE publication SET status = %s WHERE id = %s", ('rejected', pub_id))
         conn.commit()

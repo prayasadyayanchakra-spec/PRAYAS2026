@@ -1,19 +1,28 @@
 from flask import Blueprint, request, jsonify
-import MySQLdb
+import psycopg2
+import psycopg2.extras
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bp = Blueprint('books', __name__, url_prefix='/api/books')
+
+def get_db_connection():
+    """Get PostgreSQL database connection"""
+    return psycopg2.connect(
+        host=os.getenv('DB_HOST', 'dpg-d62rk3ur433s73a1514g-a.oregon-postgres.render.com'),
+        user=os.getenv('DB_USER', 'prayas2026_user'),
+        password=os.getenv('DB_PASSWORD', 'IYI9rIK1xQTvt9zooJ844Bw4LN2ZQukS'),
+        database=os.getenv('DB_NAME', 'prayas2026'),
+        port=os.getenv('DB_PORT', '5432')
+    )
 
 @bp.route('', methods=['GET'])
 def get_books():
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("""
             SELECT id, title, author, price, available, cover_image_url as coverImage,
@@ -39,13 +48,8 @@ def create_book():
         return jsonify({'error': 'Missing required fields'}), 400
     
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         cursor.execute("""
             INSERT INTO bookstore (title, author, price, category, available, cover_image_url, pdf_url_link, description)
@@ -68,13 +72,8 @@ def update_book(book_id):
     data = request.get_json()
     
     try:
-        conn = MySQLdb.connect(
-            host=os.getenv('MYSQL_HOST', 'localhost'),
-            user=os.getenv('MYSQL_USER', 'root'),
-            passwd=os.getenv('MYSQL_PASSWORD', ''),
-            db=os.getenv('MYSQL_DB', 'prayas2026')
-        )
-        cursor = conn.cursor()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         update_query = "UPDATE bookstore SET "
         params = []
