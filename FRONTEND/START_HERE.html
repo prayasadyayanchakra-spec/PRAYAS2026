@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRAYAS 2026 - Project Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            font-size: 1.5em;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .link {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .link:hover {
+            background: #5568d3;
+        }
+
+        .link.secondary {
+            background: #6c757d;
+        }
+
+        .link.secondary:hover {
+            background: #5a6268;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .feature-list {
+            list-style: none;
+            columns: 2;
+            gap: 20px;
+        }
+
+        .feature-list li {
+            padding: 8px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .credentials {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .credentials strong {
+            color: #667eea;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-list {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 PRAYAS 2026</h1>
+            <p class="subtitle">Educational Management System - Project Navigation</p>
+        </header>
+
+        <div class="grid">
+            <!-- Main Application -->
+            <div class="card">
+                <h2><span class="icon">🏠</span> Main Application</h2>
+                <p>Start here to access the main PRAYAS system</p>
+                <div class="links">
+                    <a href="index.html" class="link">Go to Home Page</a>
+                    <a href="login.html" class="link secondary">Go to Login</a>
+                </div>
+            </div>
+
+            <!-- Documentation -->
+            <div class="card">
+                <h2><span class="icon">📚</span> Documentation</h2>
+                <p>Read project documentation and guides</p>
+                <div class="links">
+                    <a href="README.md" class="link">README</a>
+                    <a href="INSTALLATION_GUIDE.md" class="link secondary">Installation Guide</a>
+                    <a href="PROJECT_SUMMARY.md" class="link secondary">Project Summary</a>
+                    <a href="FILE_LISTING.md" class="link secondary">File Listing</a>
+                </div>
+            </div>
+
+            <!-- Admin Panels -->
+            <div class="card">
+                <h2><span class="icon">⚙️</span> Admin Panels</h2>
+                <p>Access school-specific admin panels</p>
+                <div class="links">
+                    <a href="admin1.html" class="link">Bokakhat Admin</a>
+                    <a href="admin2.html" class="link secondary">Brahmaputra Admin</a>
+                    <a href="admin3.html" class="link secondary">Mohuramukh Admin</a>
+                    <a href="superadmin.html" class="link secondary">Super Admin</a>
+                </div>
+            </div>
+
+            <!-- Public Pages -->
+            <div class="card">
+                <h2><span class="icon">📖</span> Public Pages</h2>
+                <p>Browse public sections of the site</p>
+                <div class="links">
+                    <a href="schools.html" class="link">Schools</a>
+                    <a href="bookstore.html" class="link secondary">Bookstore</a>
+                    <a href="publication.html" class="link secondary">Publications</a>
+                    <a href="rankers.html" class="link secondary">Rankers</a>
+                    <a href="about.html" class="link secondary">About</a>
+                </div>
+            </div>
+
+            <!-- Database -->
+            <div class="card">
+                <h2><span class="icon">🗄️</span> Database</h2>
+                <p>Database schema and setup information</p>
+                <div class="links">
+                    <a href="database_schema.sql" class="link">View SQL Schema</a>
+                    <a href="requirements.txt" class="link secondary">Python Dependencies</a>
+                    <a href=".env.example" class="link secondary">Environment Template</a>
+                </div>
+            </div>
+
+            <!-- Setup -->
+            <div class="card">
+                <h2><span class="icon">⚡</span> Quick Start</h2>
+                <p>Setup and installation scripts</p>
+                <div class="links">
+                    <a href="setup.bat" class="link">Windows Setup (setup.bat)</a>
+                    <a href="setup.sh" class="link secondary">Linux/Mac Setup (setup.sh)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Credentials -->
+        <div class="section">
+            <h3>🔐 Default Login Credentials</h3>
+            <div class="credentials">
+                <strong>Super Admin:</strong><br>
+                Username: <code>Superadmin</code><br>
+                Password: <code>Superadmin@1341</code><br>
+                Access: superadmin.html
+            </div>
+            <div class="credentials">
+                <strong>School Admin 1 (Bokakhat):</strong><br>
+                Username: <code>Schooladmin1</code><br>
+                Password: <code>Schooladmin@13</code><br>
+                Access: admin1.html
+            </div>
+            <div class="credentials">
+                <strong>School Admin 2 (Brahmaputra):</strong><br>
+                Username: <code>Schooladmin2</code><br>
+                Password: <code>Schooladmin@93</code><br>
+                Access: admin2.html
+            </div>
+            <div class="credentials">
+                <strong>School Admin 3 (Mohuramukh):</strong><br>
+                Username: <code>Schooladmin3</code><br>
+                Password: <code>Schooladmin@390</code><br>
+                Access: admin3.html
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="section">
+            <h3>✨ Key Features</h3>
+            <ul class="feature-list">
+                <li>Student Management System</li>
+                <li>Online Fee Payment Processing</li>
+                <li>Digital Bookstore</li>
+                <li>Publication Management</li>
+                <li>Ranker Showcase</li>
+                <li>Notification System</li>
+                <li>Multi-School Support</li>
+                <li>Admin Dashboards</li>
+                <li>User Authentication</li>
+                <li>Payment Tracking</li>
+                <li>Book Order Management</li>
+                <li>Publication Approval</li>
+                <li>Fee Structure Management</li>
+                <li>Advanced Filtering</li>
+                <li>Responsive Design</li>
+            </ul>
+        </div>
+
+        <!-- Installation Summary -->
+        <div class="section">
+            <h3>🚀 Quick Installation</h3>
+            <ol style="margin-left: 20px; line-height: 2;">
+                <li>Download/Clone the project</li>
+                <li>Run setup script (setup.bat or setup.sh)</li>
+                <li>Update .env with your database credentials</li>
+                <li>Create database: <code>mysql -u root -p < database_schema.sql</code></li>
+                <li>Start Flask: <code>python app.py</code></li>
+                <li>Open index.html in your browser</li>
+                <li>Login with default credentials above</li>
+            </ol>
+        </div>
+
+        <!-- Project Info -->
+        <div class="section">
+            <h3>📊 Project Statistics</h3>
+            <p>
+                <strong>Total Files:</strong> 41 files<br>
+                <strong>Frontend:</strong> 11 HTML pages, 3 CSS files, 9 JavaScript files<br>
+                <strong>Backend:</strong> 9 Python files (Flask API)<br>
+                <strong>Database:</strong> 8 tables with proper relationships<br>
+                <strong>API Endpoints:</strong> 23 endpoints<br>
+                <strong>Total Code:</strong> ~8,350 lines<br>
+                <strong>Estimated Setup Time:</strong> 30-45 minutes
+            </p>
+        </div>
+
+        <!-- Technologies -->
+        <div class="section">
+            <h3>🛠️ Technology Stack</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div>
+                    <strong>Frontend</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>HTML5</li>
+                        <li>CSS3</li>
+                        <li>Vanilla JavaScript</li>
+                        <li>Responsive Design</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Backend</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Python 3.8+</li>
+                        <li>Flask Framework</li>
+                        <li>JWT Authentication</li>
+                        <li>RESTful API</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong>Database</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>MySQL</li>
+                        <li>Hostinger Compatible</li>
+                        <li>Normalized Schema</li>
+                        <li>Performance Indexes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>PRAYAS 2026 - Educational Management System</p>
+            <p>Created: February 6, 2026 | Version: 1.0.0 | Status: Production Ready ✅</p>
+        </footer>
+    </div>
+</body>
+</html>

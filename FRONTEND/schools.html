@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schools - Prayas Adhyan Chakra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Prayas Adhyan Chakra</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="schools.html" class="active">SCHOOLS</a></li>
+                <li><a href="bookstore.html">BOOKSTORE</a></li>
+                <li><a href="publication.html">PUBLICATION</a></li>
+                <li><a href="rankers.html">RANKERS</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="login.html">LOGIN</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="schools-page">
+        <h1>Schools</h1>
+        
+        <div class="school-selector">
+            <label for="schoolSelect">Select School:</label>
+            <select id="schoolSelect" onchange="loadSchoolFeeStructure()">
+                <option value="">-- Choose School --</option>
+                <option value="Bokakhat Jatiya Bidyalaya">Bokakhat Jatiya Bidyalaya</option>
+                <option value="Brahmaputra Jatiya Bidyalaya">Brahmaputra Jatiya Bidyalaya</option>
+                <option value="Mohuramukh Jatiya Bidyalaya">Mohuramukh Jatiya Bidyalaya</option>
+            </select>
+        </div>
+
+        <div id="feeStructureContainer">
+            <h2 id="schoolName"></h2>
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Monthly Fee</th>
+                        <th>Quarterly Fee</th>
+                        <th>Yearly Fee</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="feeTableBody">
+                    <!-- Data loaded from database -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payment Modal -->
+        <div id="paymentModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closePaymentModal()">&times;</span>
+                <h2>Payment Form</h2>
+                <form id="paymentForm">
+                    <input type="text" id="payName" placeholder="Name" readonly>
+                    <input type="text" id="payRollNo" placeholder="Roll Number" readonly>
+                    <input type="text" id="paySchoolName" placeholder="School Name" readonly>
+                    <input type="text" id="payFatherName" placeholder="Father's Name" readonly>
+                    <p id="matchStatus"></p>
+                    <button type="submit" class="btn btn-pay" id="payButton" disabled>PAY</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Prayas Adhyan Chakra. All rights reserved.</p>
+    </footer>
+
+    <script src="js/schools.js"></script>
+</body>
+</html>

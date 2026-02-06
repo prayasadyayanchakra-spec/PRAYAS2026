@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Mohuramukh Jatiya Bidyalaya</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <nav class="admin-nav">
+        <div class="nav-container">
+            <div class="logo">Admin Panel - Mohuramukh Jatiya Bidyalaya</div>
+            <button onclick="logout()" class="btn btn-secondary">Logout</button>
+        </div>
+    </nav>
+
+    <main class="admin-container">
+        <div class="admin-sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#students" onclick="showSection('students')" class="active">Students</a></li>
+                <li><a href="#payments" onclick="showSection('payments')">Payments</a></li>
+                <li><a href="#add-payment" onclick="showSection('add-payment')">Add Payment Record</a></li>
+            </ul>
+        </div>
+
+        <div class="admin-content">
+            <!-- Students Section -->
+            <section id="students" class="admin-section active">
+                <h2>Students Management</h2>
+                <div class="filters">
+                    <input type="text" placeholder="Search by Name" id="nameFilter" onkeyup="filterStudents()">
+                    <input type="text" placeholder="Search by Roll Number" id="rollFilter" onkeyup="filterStudents()">
+                    <select onchange="filterStudents()">
+                        <option value="">All Classes</option>
+                        <option value="I">I</option>
+                        <option value="II">II</option>
+                        <option value="III">III</option>
+                    </select>
+                    <select onchange="filterStudents()">
+                        <option value="">All Castes</option>
+                        <option value="general">General</option>
+                        <option value="st">ST</option>
+                        <option value="sc">SC</option>
+                        <option value="obc">OBC</option>
+                    </select>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Roll Number</th>
+                            <th>Class</th>
+                            <th>Caste</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Payments Section -->
+            <section id="payments" class="admin-section">
+                <h2>Payment Records</h2>
+                <div class="filters">
+                    <input type="text" placeholder="Search by Name" id="paymentNameFilter" onkeyup="filterPayments()">
+                    <input type="text" placeholder="Search by Payment ID" id="paymentIdFilter" onkeyup="filterPayments()">
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Roll Number</th>
+                            <th>Payment ID</th>
+                            <th>Class</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Add Payment Record Section -->
+            <section id="add-payment" class="admin-section">
+                <h2>Add Payment Record</h2>
+                <form id="addPaymentForm" class="admin-form">
+                    <div class="form-group">
+                        <label>User ID:</label>
+                        <input type="text" id="userId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name:</label>
+                        <input type="text" id="paymentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Father Name:</label>
+                        <input type="text" id="paymentFatherName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fee Type:</label>
+                        <select id="feeType" required onchange="updateAmount()">
+                            <option value="">-- Select Fee Type --</option>
+                            <option value="monthly">Monthly Fee</option>
+                            <option value="quarterly">Quarterly Fee</option>
+                            <option value="yearly">Yearly Fee</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" id="amount" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Class:</label>
+                        <select id="paymentClass" required>
+                            <option value="">-- Select Class --</option>
+                            <option value="I">I</option>
+                            <option value="II">II</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Record</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="admin3.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rankers - Prayas Adhyan Chakra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Prayas Adhyan Chakra</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="schools.html">SCHOOLS</a></li>
+                <li><a href="bookstore.html">BOOKSTORE</a></li>
+                <li><a href="publication.html">PUBLICATION</a></li>
+                <li><a href="rankers.html" class="active">RANKERS</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="login.html">LOGIN</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="rankers-page">
+        <h1>Top Rankers</h1>
+        
+        <div class="ranker-filter">
+            <label for="yearSelect">Filter by Year:</label>
+            <select id="yearSelect" onchange="filterRankersByYear()">
+                <option value="">-- All Years --</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+            </select>
+        </div>
+
+        <div class="rankers-grid" id="rankersContainer">
+            <!-- Ranker cards loaded from database -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Prayas Adhyan Chakra. All rights reserved.</p>
+    </footer>
+
+    <script src="js/rankers.js"></script>
+</body>
+</html>

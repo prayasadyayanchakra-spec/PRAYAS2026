@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Panel - Prayas Adhyan Chakra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <nav class="admin-nav">
+        <div class="nav-container">
+            <div class="logo">Super Admin Panel</div>
+            <button onclick="logout()" class="btn btn-secondary">Logout</button>
+        </div>
+    </nav>
+
+    <main class="admin-container">
+        <div class="admin-sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#students" onclick="showSection('students')" class="active">Students</a></li>
+                <li><a href="#payments" onclick="showSection('payments')">Payments</a></li>
+                <li><a href="#notifications" onclick="showSection('notifications')">Notifications</a></li>
+                <li><a href="#fees" onclick="showSection('fees')">Fee Management</a></li>
+                <li><a href="#rankers" onclick="showSection('rankers')">Rankers</a></li>
+                <li><a href="#publications" onclick="showSection('publications')">Publications</a></li>
+                <li><a href="#books" onclick="showSection('books')">Books</a></li>
+                <li><a href="#orders" onclick="showSection('orders')">Book Orders</a></li>
+            </ul>
+        </div>
+
+        <div class="admin-content">
+            <!-- Students Section -->
+            <section id="students" class="admin-section active">
+                <h2>All Students</h2>
+                <div class="filters">
+                    <input type="text" placeholder="Search by Name" id="nameFilter" onkeyup="filterStudents()">
+                    <input type="text" placeholder="Search by Roll Number" id="rollFilter" onkeyup="filterStudents()">
+                    <select onchange="filterStudents()">
+                        <option value="">All Schools</option>
+                        <option value="Bokakhat Jatiya Bidyalaya">Bokakhat Jatiya Bidyalaya</option>
+                        <option value="Brahmaputra Jatiya Bidyalaya">Brahmaputra Jatiya Bidyalaya</option>
+                        <option value="Mohuramukh Jatiya Bidyalaya">Mohuramukh Jatiya Bidyalaya</option>
+                    </select>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Roll Number</th>
+                            <th>Class</th>
+                            <th>Caste</th>
+                            <th>School</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Payments Section -->
+            <section id="payments" class="admin-section">
+                <h2>All Payment Records</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Roll Number</th>
+                            <th>Payment ID</th>
+                            <th>Class</th>
+                            <th>Amount</th>
+                            <th>School</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications" class="admin-section">
+                <h2>Notifications Management</h2>
+                <form id="notificationForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Date:</label>
+                        <input type="date" id="notifDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link:</label>
+                        <input type="url" id="notifLink" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Notification</button>
+                </form>
+                <h3>All Notifications</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Link</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notificationsTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Fee Management Section -->
+            <section id="fees" class="admin-section">
+                <h2>Fee Structure Management</h2>
+                <form id="feeForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Class:</label>
+                        <select id="feeClass" required>
+                            <option value="">-- Select Class --</option>
+                            <option value="ankur">Ankur</option>
+                            <option value="kuhi">Kuhi</option>
+                            <option value="hupan">Hupan</option>
+                            <option value="I">I</option>
+                            <option value="II">II</option>
+                            <!-- Add more classes -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>School:</label>
+                        <select id="feeSchool" required>
+                            <option value="">-- Select School --</option>
+                            <option value="Bokakhat Jatiya Bidyalaya">Bokakhat Jatiya Bidyalaya</option>
+                            <option value="Brahmaputra Jatiya Bidyalaya">Brahmaputra Jatiya Bidyalaya</option>
+                            <option value="Mohuramukh Jatiya Bidyalaya">Mohuramukh Jatiya Bidyalaya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fee Type:</label>
+                        <select id="feeType" required>
+                            <option value="">-- Select Fee Type --</option>
+                            <option value="monthly">Monthly Fee</option>
+                            <option value="quarterly">Quarterly Fee</option>
+                            <option value="yearly">Yearly Fee</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" id="feeAmount" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Fee Structure</button>
+                </form>
+            </section>
+
+            <!-- Rankers Section -->
+            <section id="rankers" class="admin-section">
+                <h2>Rankers Management</h2>
+                <form id="rankerForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="rankerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>School:</label>
+                        <select id="rankerSchool" required>
+                            <option value="">-- Select School --</option>
+                            <option value="Bokakhat Jatiya Bidyalaya">Bokakhat Jatiya Bidyalaya</option>
+                            <option value="Brahmaputra Jatiya Bidyalaya">Brahmaputra Jatiya Bidyalaya</option>
+                            <option value="Mohuramukh Jatiya Bidyalaya">Mohuramukh Jatiya Bidyalaya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Rank:</label>
+                        <input type="number" id="rankerRank" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Class:</label>
+                        <input type="text" id="rankerClass" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Year:</label>
+                        <input type="number" id="rankerYear" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL:</label>
+                        <input type="url" id="rankerImage" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Ranker</button>
+                </form>
+            </section>
+
+            <!-- Publications Section -->
+            <section id="publications" class="admin-section">
+                <h2>Publications Approval</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="publicationsTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Books Section -->
+            <section id="books" class="admin-section">
+                <h2>Books Management</h2>
+                <form id="bookForm" class="admin-form">
+                    <div class="form-group">
+                        <label>Title:</label>
+                        <input type="text" id="bookTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author:</label>
+                        <input type="text" id="bookAuthor" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price:</label>
+                        <input type="number" id="bookPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <input type="text" id="bookCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Available:</label>
+                        <select id="bookAvailable" required>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Book</button>
+                </form>
+                <h3>All Books</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Price</th>
+                            <th>Available</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Book Orders Section -->
+            <section id="orders" class="admin-section">
+                <h2>Book Orders</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Book Title</th>
+                            <th>User Name</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Data loaded from database -->
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <script src="superadmin.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Prayas Adhyan Chakra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Prayas Adhyan Chakra</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="schools.html">SCHOOLS</a></li>
+                <li><a href="bookstore.html">BOOKSTORE</a></li>
+                <li><a href="publication.html">PUBLICATION</a></li>
+                <li><a href="rankers.html">RANKERS</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="login.html" class="active">LOGIN</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="login-page">
+        <div class="login-container">
+            <h1>Login</h1>
+            <form id="loginFormPage" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginType">Login As:</label>
+                    <select id="loginType" name="loginType" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="admin">Admin</option>
+                        <option value="student">Student</option>
+                        <option value="public">Public</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p>Don't have an account? <a href="#" onclick="goToRegister()">Register here</a></p>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Prayas Adhyan Chakra. All rights reserved.</p>
+    </footer>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

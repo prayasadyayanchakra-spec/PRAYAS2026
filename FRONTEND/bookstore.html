@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore - Prayas Adhyan Chakra</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="navbar.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Prayas Adhyan Chakra</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="schools.html">SCHOOLS</a></li>
+                <li><a href="bookstore.html" class="active">BOOKSTORE</a></li>
+                <li><a href="publication.html">PUBLICATION</a></li>
+                <li><a href="rankers.html">RANKERS</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="login.html">LOGIN</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="bookstore-page">
+        <h1>Bookstore</h1>
+        <div class="books-grid" id="booksContainer">
+            <!-- Book cards loaded from database -->
+        </div>
+    </main>
+
+    <!-- Book Details Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBookModal()">&times;</span>
+            <div class="book-details">
+                <img id="bookCover" src="" alt="Book Cover">
+                <h2 id="bookTitle"></h2>
+                <p><strong>Author:</strong> <span id="bookAuthor"></span></p>
+                <p><strong>Price:</strong> <span id="bookPrice"></span></p>
+                <p><strong>Category:</strong> <span id="bookCategory"></span></p>
+                <p><strong>Available:</strong> <span id="bookAvailable"></span></p>
+                <p id="bookDescription"></p>
+                <a id="bookPdfLink" href="" target="_blank" class="btn btn-secondary">View PDF</a>
+                <button class="btn btn-primary" onclick="buyNow()">BUY NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Prayas Adhyan Chakra. All rights reserved.</p>
+    </footer>
+
+    <script src="js/bookstore.js"></script>
+</body>
+</html>
