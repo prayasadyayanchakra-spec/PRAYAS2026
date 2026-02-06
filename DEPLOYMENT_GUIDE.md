@@ -1,307 +1,164 @@
 # PRAYAS 2026 - Deployment Configuration Guide
 
-## Deployment Architecture
+## Service Metadata
+
+| Property | Value |
+|----------|-------|
+| Service Type | Web Service |
+| Service Name | PRAYAS2026 |
+| Runtime | Python 3 |
+| Plan Tier | Free |
+| Service ID | srv-d62rdmu8alac738mgi6g |
+
+## Source Control Configuration
+
+| Property | Value |
+|----------|-------|
+| Repository | prayasadyavanchakra-spec / PRAYAS2026 |
+| Branch | main |
+| Deployment Endpoint | https://prayas2026.onrender.com |
+
+## Operational Status
+
+- Instance configured on free tier; auto spin-down enabled during inactivity with potential cold-start latency exceeding 50 seconds
+- Deployment currently blocked due to empty repository state
+
+## Required Remediation
+
+1. Commit application source files to the repository
+2. Push to main branch
+3. Trigger deployment via Manual Deploy → Deploy latest commit
+
+## Available Platform Controls
+
+### Monitoring
+- Logs
+- Metrics
+
+### Management
+- Environment Variables
+- Shell Access
+- Scaling Controls
+- Preview Environments
+
+## Deployment Process
+
+### Prerequisites
+- Repository contains application source files
+- All files committed to main branch on GitHub
+- Service ID: srv-d62rdmu8alac738mgi6g is active
+
+### Critical Issues to Address
+The deployment is currently blocked. To proceed:
+
+1. **Commit application source files**
+   - Push all source code to repository
+   - Ensure files are on main branch
+
+2. **Trigger deployment**
+   - Access Render dashboard
+   - Navigate to Manual Deploy section
+   - Select "Deploy latest commit"
+
+### Environment Configuration Required
+
+Set the following environment variables in Render dashboard:
 
 ```
-PRAYAS2026 (GitHub Repository)
-├── backend/           → Deploy to Render
-├── frontend/          → Deploy to Vercel
-├── database/          → MySQL on Hostinger
-├── docs/              → Documentation
-└── .github/           → GitHub Actions (optional)
-```
-
-## Platform Specific Configurations
-
-### 1. RENDER (Backend Deployment)
-
-**Environment Variables to Set:**
-```
-RENDER_INTERNAL_HOSTNAME=localhost
-MYSQL_HOST=your-hostinger-host
-MYSQL_USER=your-username
-MYSQL_PASSWORD=your-password
-MYSQL_DB=prayas2026
 FLASK_ENV=production
-SECRET_KEY=your-secure-random-key
-CORS_ORIGINS=https://your-vercel-domain.vercel.app
-DATABASE_URL=mysql://user:password@host/prayas2026
+MYSQL_HOST=<your-hostinger-host>
+MYSQL_USER=<your-username>
+MYSQL_PASSWORD=<your-password>
+MYSQL_DB=prayas2026
+SECRET_KEY=<secure-random-key>
+CORS_ORIGINS=<your-frontend-domain>
 ```
 
-**Build Command:**
-```bash
-pip install -r requirements.txt
+## Platform Monitoring & Controls
+
+Access the following controls via Render dashboard:
+
+### Monitoring
+- View deployment logs in real-time
+- Track application metrics
+- Monitor resource utilization
+
+### Management
+- Configure environment variables
+- Access shell for debugging
+- Manage service scaling
+- Create preview environments
+
+## Health Check Endpoint
+
+Test service status at:
+```
+https://prayas2026.onrender.com/api/health
 ```
 
-**Start Command:**
-```bash
-gunicorn -w 4 -b 0.0.0.0:10000 app:app
-```
-
-### 2. VERCEL (Frontend Deployment)
-
-**vercel.json Configuration:**
+Expected response:
 ```json
 {
-  "buildCommand": "echo 'Static site deployment'",
-  "outputDirectory": ".",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "env": {
-    "REACT_APP_API_URL": "@api_url"
-  }
+  "status": "healthy",
+  "service": "PRAYAS2026",
+  "timestamp": "2026-02-06T09:43:17.361Z"
 }
 ```
 
-**Environment Variables:**
-```
-NEXT_PUBLIC_API_URL=https://your-render-backend.onrender.com
-```
+## Deployment Best Practices
 
-### 3. HOSTINGER (Database & Domain)
+### Before Deployment
+1. Verify all source files are committed
+2. Confirm main branch contains latest code
+3. Validate environment variables are set
+4. Test locally if possible
 
-**MySQL Setup:**
-1. Create database: prayas2026
-2. Create user with full permissions
-3. Whitelist Render IP in firewall
-4. Note down: Host, Port (usually 3306), Username, Password
+### During Deployment
+1. Monitor logs for errors
+2. Check deployment status
+3. Verify health check passes
 
-**Domain Configuration:**
-1. Point domain to Vercel nameservers
-2. OR configure DNS records for both services
+### After Deployment
+1. Test API endpoints
+2. Verify database connectivity
+3. Check cold-start performance
+4. Monitor error rates
 
-### 4. GITHUB Setup
+## Cold Start Considerations
 
-**Repository Structure:**
-```
-https://github.com/yourusername/PRAYAS2026
-├── backend/
-├── frontend/
-└── docs/
-```
-
-## Deployment Steps
-
-### Step 1: GitHub Push
-```bash
-git init
-git add .
-git commit -m "Initial PRAYAS2026 commit"
-git remote add origin https://github.com/yourusername/PRAYAS2026.git
-git branch -M main
-git push -u origin main
-```
-
-### Step 2: Render Deployment (Backend)
-
-1. Go to https://render.com
-2. Create new Web Service
-3. Connect GitHub repository
-4. Settings:
-   - Root Directory: `backend`
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `gunicorn -w 4 -b 0.0.0.0:10000 app:app`
-   - Environment: Add variables from above
-
-### Step 3: Vercel Deployment (Frontend)
-
-1. Go to https://vercel.com
-2. Create new project
-3. Import GitHub repository
-4. Settings:
-   - Framework: Other
-   - Root Directory: `frontend`
-   - Build Command: Leave blank
-   - Output Directory: .
-   - Environment: Add NEXT_PUBLIC_API_URL
-
-### Step 4: Hostinger Database
-
-1. MySQL Database
-   - Create database: prayas2026
-   - Import: database_schema.sql
-   - Create user with all privileges
-
-2. Domain Setup
-   - Use Hostinger nameservers or configure DNS
-   - Point to Vercel for frontend
-   - Use custom domain for backend (Render)
-
-## Post-Deployment Configuration
-
-### 1. Update Frontend API URLs
-
-In `frontend/js/auth.js` and other files, update:
-```javascript
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://your-render-backend.onrender.com';
-
-fetch(`${API_URL}/api/auth/login`, {
-  // ...
-});
-```
-
-### 2. Update CORS in Backend
-
-In `backend/app.py`:
-```python
-CORS(app, resources={
-    r"/api/*": {
-        "origins": ["https://your-vercel-domain.vercel.app"],
-        "methods": ["GET", "POST", "PUT", "DELETE"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
-```
-
-### 3. Update Database Connection
-
-In `backend/app.py`:
-```python
-app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST', 'your-hostinger-host')
-app.config['MYSQL_USER'] = os.getenv('MYSQL_USER', 'your-user')
-app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD', 'your-password')
-app.config['MYSQL_DB'] = os.getenv('MYSQL_DB', 'prayas2026')
-```
-
-## Testing Deployment
-
-### Test API Endpoints
-```bash
-curl https://your-render-backend.onrender.com/api/health
-```
-
-### Test Frontend
-```bash
-Open https://your-vercel-domain.vercel.app
-```
-
-### Test Database Connection
-```bash
-mysql -h your-hostinger-host -u your-user -p your-password -D prayas2026
-```
+This free tier service includes auto spin-down during inactivity:
+- First request after inactivity may experience 50+ second delay
+- Subsequent requests perform normally
+- Consider implementing health check monitoring
+- Plan user communication for potential latency
 
 ## Troubleshooting
 
-### Backend Connection Issues
-- Check Render logs: Dashboard → Logs
-- Verify environment variables set
-- Check MySQL whitelist IP
-- Test: curl https://render-url/api/health
+### Deployment Blocked Issues
+- Ensure repository is not empty
+- Verify source files are committed to main branch
+- Check Service ID matches configuration
+- Review manual deploy option in dashboard
 
-### Frontend Issues
-- Check Vercel logs: Dashboard → Deployments
-- Clear browser cache
-- Check NEXT_PUBLIC_API_URL is set
-- Verify CORS configuration
+### Environment Variable Issues
+- Confirm all required variables are set
+- Verify variable values are correct
+- Check for whitespace or special characters
+- Use dashboard UI to manage variables
 
-### Database Issues
-- Test connection locally first
-- Check Hostinger firewall
-- Verify MySQL user permissions
-- Check database exists
-
-## Performance Optimization
-
-### Render (Backend)
-- Use gunicorn with 4 workers
-- Enable caching headers
-- Optimize database queries
-- Monitor response times
-
-### Vercel (Frontend)
-- Enable edge caching
-- Compress assets
-- Minimize JavaScript
-- Optimize images
-
-### Hostinger (Database)
-- Use connection pooling
-- Optimize queries
-- Regular backups
-- Monitor performance
-
-## Security Checklist
-
-- [ ] Change all default passwords
-- [ ] Use strong SECRET_KEY
-- [ ] Enable HTTPS everywhere
-- [ ] Configure CORS properly
-- [ ] Set up firewall rules
-- [ ] Enable database backups
-- [ ] Configure rate limiting
-- [ ] Monitor access logs
-- [ ] Use environment variables
-- [ ] Regular security updates
-
-## Monitoring & Maintenance
-
-### Set Up Alerts
-- Render: Error rates
-- Vercel: Build failures
-- Hostinger: Database size
-
-### Regular Tasks
-- Monitor error logs
-- Check performance metrics
-- Update dependencies
-- Backup database (daily)
-- Review access logs
-- Test critical paths
-
-## DNS Configuration (Example)
-
-```
-Domain: yourdomain.com
-
-A Record:
-  Name: @
-  Value: Vercel IP (from Vercel dashboard)
-
-CNAME Record (for backend):
-  Name: api
-  Value: your-render-service.onrender.com
-
-CNAME Record (for www):
-  Name: www
-  Value: yourdomain.com
-```
-
-## Git Workflow
-
-### First Time Push
-```bash
-cd PRAYAS2026
-git init
-git add .
-git commit -m "Initial commit: PRAYAS 2026 complete project"
-git remote add origin https://github.com/yourusername/PRAYAS2026.git
-git branch -M main
-git push -u origin main
-```
-
-### Future Updates
-```bash
-git add .
-git commit -m "Update: [description]"
-git push origin main
-```
-
-Render and Vercel will automatically redeploy!
-
-## Documentation Files Needed
-
-- DEPLOYMENT_GUIDE.md (this file)
-- RENDER_SETUP.md
-- VERCEL_SETUP.md
-- HOSTINGER_SETUP.md
-- ENVIRONMENT_VARIABLES.md
+### Performance Issues
+- Check logs for error messages
+- Monitor cold-start metrics
+- Verify database connectivity
+- Review application error rates
 
 ---
 
-**Created**: February 6, 2026
-**Version**: 1.0.0
-**Status**: Deployment Ready
+**Last Updated**: February 6, 2026, 09:43:17 UTC
+**Service ID**: srv-d62rdmu8alac738mgi6g
+**Service Name**: PRAYAS2026
+**Deployment Endpoint**: https://prayas2026.onrender.com
+**Repository**: prayasadyavanchakra-spec/PRAYAS2026
+**Branch**: main
+**Current Status**: Deployment blocked - awaiting repository population
+**Version**: 2.0.0
