@@ -13,7 +13,16 @@ import psycopg2.extras
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS for specific domain
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["https://prayas-2026-9nzyw6u0g-prayas-projects-296a2a3c.vercel.app"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 # Configuration
 DATABASE_URL = os.getenv('DATABASE_URL')
